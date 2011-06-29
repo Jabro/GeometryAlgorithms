@@ -2,11 +2,11 @@ package dh.geometry.closestPoints;
 
 import java.util.ArrayList;
 
-import dh.geometry.regions.Point;
+import dh.geometry.OurPoint;
 
 public class ClosestPointsFinder {
 
-	public Point[] getClosestPoints(Point[] allPoints) {
+	public OurPoint[] getClosestPoints(OurPoint[] allPoints) {
 
 		/*
 		 * Check ob das übergebene Array vielleicht nur 0,1,2 Elemente
@@ -27,14 +27,14 @@ public class ClosestPointsFinder {
 		 * In folgendem Array sollen nachher die dichtesten zwei Punkte
 		 * übergeben werden.
 		 */
-		Point[] closestPoints = null;
+		OurPoint[] closestPoints = null;
 
 		/*
 		 * Das folgende Array beinhaltet die Punktemenge nach x 
 		 * sortiert.
 		 */
 
-		Point[] sortedByX = sortByX(allPoints);
+		OurPoint[] sortedByX = sortByX(allPoints);
 
 		/*
 		 * Aufruf der Rekursion für die komplette Punktemenge
@@ -47,8 +47,8 @@ public class ClosestPointsFinder {
 
 	}
 
-	private Point[] getClosestPointsRecursive(Point[] sortedByX, int i, int j) {
-		Point[] closestPoints = null;
+	private OurPoint[] getClosestPointsRecursive(OurPoint[] sortedByX, int i, int j) {
+		OurPoint[] closestPoints = null;
 
 		/*
 		 * Check, ob nur keine, einer, zwei oder 3 Punkt(e) vorhanden sind. Bei
@@ -58,11 +58,11 @@ public class ClosestPointsFinder {
 		if (j - i < 1) {
 			return null;
 		} else if (j - i == 1) {
-			closestPoints = new Point[] { sortedByX[i], sortedByX[j] };
+			closestPoints = new OurPoint[] { sortedByX[i], sortedByX[j] };
 			return closestPoints;
 		} else if (j - i == 2) {
 			try {
-				Point[] threePoints = new Point[] { sortedByX[i],
+				OurPoint[] threePoints = new OurPoint[] { sortedByX[i],
 						sortedByX[i + 1], sortedByX[j] };
 				return getClosestFromThree(threePoints);
 			} catch (Exception e) {
@@ -72,10 +72,10 @@ public class ClosestPointsFinder {
 		// Teilungsindex bestimmen
 		int mid = (i + j) / 2;
 		// Aufruf Rekursion für die linke Hälfte
-		Point[] closestPointsLeft = getClosestPointsRecursive(sortedByX, i,
+		OurPoint[] closestPointsLeft = getClosestPointsRecursive(sortedByX, i,
 				mid);
 		// Aufruf Rekursion für die rechte Hälfte
-		Point[] closestPointsRight = getClosestPointsRecursive(sortedByX,
+		OurPoint[] closestPointsRight = getClosestPointsRecursive(sortedByX,
 				mid + 1, j);
 
 		double distanceLeft;
@@ -105,17 +105,17 @@ public class ClosestPointsFinder {
 		double left = sortedByX[mid + 1].getX() - distance;
 
 		// Alle Punkte des Linken Bereichs suchen, die in Frage kommen:
-		Point[] pointsLeft = getCriticalPointsIndexMinus(sortedByX,
+		OurPoint[] pointsLeft = getCriticalPointsIndexMinus(sortedByX,
 				Math.max(left, sortedByX[i].getX()), sortedByX[mid + 1].getX(),
 				mid, i);
 		// Alle Punkte des Rechten Bereichs suchen, die in Frage kommen:
-		Point[] pointsRight = getCriticalPointsIndexPlus(sortedByX,
+		OurPoint[] pointsRight = getCriticalPointsIndexPlus(sortedByX,
 				sortedByX[mid].getX(), Math.min(right, sortedByX[j].getX()),
 				mid, j);
 
 		// Kürzeren Abstand zwischen 2 Punkten aus dem linken und rechten
 		// Teilbereich suchen
-		Point[] evenCloser = lookForCloser(pointsLeft, pointsRight, distance);
+		OurPoint[] evenCloser = lookForCloser(pointsLeft, pointsRight, distance);
 		if (evenCloser != null) {
 			closestPoints = evenCloser;
 		}
@@ -128,13 +128,13 @@ public class ClosestPointsFinder {
 	 * gesucht, dessen Distanz kleiner als distance ist. Falls keines gefunden
 	 * wird: return null
 	 */
-	private Point[] lookForCloser(Point[] pointsLeft, Point[] pointsRight,
+	private OurPoint[] lookForCloser(OurPoint[] pointsLeft, OurPoint[] pointsRight,
 			double distance) {
-		Point p1 = null;
-		Point p2 = null;
+		OurPoint p1 = null;
+		OurPoint p2 = null;
 		double newDistance = Double.MAX_VALUE;
-		for (Point point1 : pointsLeft) {
-			for (Point point2 : pointsRight) {
+		for (OurPoint point1 : pointsLeft) {
+			for (OurPoint point2 : pointsRight) {
 				/*
 				 * durch die if Abfragen wird überprüft, ob die Distanz
 				 * überhaupt komplett errechnet werden muss, oder es schon
@@ -153,7 +153,7 @@ public class ClosestPointsFinder {
 			}
 		}
 		if (p1 != null && p2 != null) {
-			Point[] gotCloser = { p1, p2 };
+			OurPoint[] gotCloser = { p1, p2 };
 			return gotCloser;
 		} else {
 			return null;
@@ -166,15 +166,15 @@ public class ClosestPointsFinder {
 	 * sind, dass sie vielleicht die momentane Minimaldistanz unterbieten können in Verbindung
 	 * mit einem Punkt der linken Seite.
 	 */
-	private Point[] getCriticalPointsIndexPlus(Point[] sortedByX, double left,
+	private OurPoint[] getCriticalPointsIndexPlus(OurPoint[] sortedByX, double left,
 			double right, int mid, int maxIndex) {
-		ArrayList<Point> points = new ArrayList<Point>();
+		ArrayList<OurPoint> points = new ArrayList<OurPoint>();
 		getCriticalPointsRecursiveIndexPlus(sortedByX, left, right, mid + 1,
 				points, maxIndex);
 		Object[] array = points.toArray();
-		Point[] result = new Point[array.length];
+		OurPoint[] result = new OurPoint[array.length];
 		for (int i = 0; i < array.length; i++) {
-			result[i] = (Point) array[i];
+			result[i] = (OurPoint) array[i];
 		}
 
 		return result;
@@ -185,9 +185,9 @@ public class ClosestPointsFinder {
 	 * sind, dass sie vielleicht die momentane Minimaldistanz unterbieten können in Verbindung
 	 * mit einem Punkt der rechten Seite.
 	 */
-	private Point[] getCriticalPointsIndexMinus(Point[] sortedByX, double left,
+	private OurPoint[] getCriticalPointsIndexMinus(OurPoint[] sortedByX, double left,
 			double right, int mid, int minIndex) {
-		ArrayList<Point> points = new ArrayList<Point>();
+		ArrayList<OurPoint> points = new ArrayList<OurPoint>();
 		if (sortedByX[mid].getX() >= left && sortedByX[mid].getX() <= right) {
 			if (!points.contains(sortedByX[mid])) {
 				points.add(sortedByX[mid]);
@@ -196,9 +196,9 @@ public class ClosestPointsFinder {
 		getCriticalPointsRecursiveIndexMinus(sortedByX, left, right, mid - 1,
 				points, minIndex);
 		Object[] array = points.toArray();
-		Point[] result = new Point[array.length];
+		OurPoint[] result = new OurPoint[array.length];
 		for (int i = 0; i < array.length; i++) {
-			result[i] = (Point) array[i];
+			result[i] = (OurPoint) array[i];
 		}
 
 		return result;
@@ -211,8 +211,8 @@ public class ClosestPointsFinder {
 	 * Rekursionsmethode. Geht immer einen Schritt weiter nach rechts im Array, bis man außerhalb
 	 * der Grenzen ist.
 	 */
-	private void getCriticalPointsRecursiveIndexPlus(Point[] sortedByX,
-			double left, double right, int index, ArrayList<Point> points,
+	private void getCriticalPointsRecursiveIndexPlus(OurPoint[] sortedByX,
+			double left, double right, int index, ArrayList<OurPoint> points,
 			int maxIndex) {
 		if (sortedByX[index].getX() <= right && index <= maxIndex) {
 			if (!points.contains(sortedByX[index])) {
@@ -233,8 +233,8 @@ public class ClosestPointsFinder {
 	 * Rekursionsmethode. Geht immer einen Schritt weiter nach links im Array, bis man außerhalb
 	 * der Grenzen ist.
 	 */
-	private void getCriticalPointsRecursiveIndexMinus(Point[] sortedByX,
-			double left, double right, int index, ArrayList<Point> points,
+	private void getCriticalPointsRecursiveIndexMinus(OurPoint[] sortedByX,
+			double left, double right, int index, ArrayList<OurPoint> points,
 			int minIndex) {
 		if (sortedByX[index].getX() >= left && index >= minIndex) {
 			if (!points.contains(sortedByX[index])) {
@@ -252,14 +252,14 @@ public class ClosestPointsFinder {
 	 * Liefert die beiden Punkte mit kürzester Distanz aus einer Menge von drei
 	 * Punkten.
 	 */
-	private Point[] getClosestFromThree(Point[] threePoints) throws Exception {
+	private OurPoint[] getClosestFromThree(OurPoint[] threePoints) throws Exception {
 		if (threePoints.length != 3) {
 			throw new Exception("Something went wrong here.");
 		}
 		double d1 = distance(threePoints[0], threePoints[1]);
 		double d2 = distance(threePoints[1], threePoints[2]);
 		double d3 = distance(threePoints[2], threePoints[0]);
-		Point[] closest = new Point[2];
+		OurPoint[] closest = new OurPoint[2];
 		if (d1 <= d2 && d1 <= d3) {
 			closest[0] = threePoints[0];
 			closest[1] = threePoints[1];
@@ -278,7 +278,7 @@ public class ClosestPointsFinder {
 	/*
 	 * Liefert die euklidische Distanz zweier Punkte
 	 */
-	private double distance(Point point, Point point2) {
+	private double distance(OurPoint point, OurPoint point2) {
 		return Math.sqrt(Math.pow(point.getX() - point2.getX(), 2)
 				+ Math.pow(point.getY() - point2.getY(), 2));
 	}
@@ -288,15 +288,15 @@ public class ClosestPointsFinder {
 	 * X und einmal nach Y Koordinaten.
 	 */
 
-	public Point[] sortByX(Point[] allPoints) {
-		Point[] toSortByX = allPoints.clone();
+	public OurPoint[] sortByX(OurPoint[] allPoints) {
+		OurPoint[] toSortByX = allPoints.clone();
 		quicksortByX(toSortByX, 0, toSortByX.length - 1);
 		return toSortByX;
 	}
 
-	private void quicksortByX(Point[] toSortByX, int low, int high) {
+	private void quicksortByX(OurPoint[] toSortByX, int low, int high) {
 		int i = low, j = high;
-		Point pivot = toSortByX[low + (high - low) / 2];
+		OurPoint pivot = toSortByX[low + (high - low) / 2];
 		while (i <= j) {
 			while (toSortByX[i].getX() < pivot.getX()) {
 				i++;
@@ -316,15 +316,15 @@ public class ClosestPointsFinder {
 			quicksortByX(toSortByX, i, high);
 	}
 
-	public Point[] sortByY(Point[] allPoints) {
-		Point[] toSortByY = allPoints.clone();
+	public OurPoint[] sortByY(OurPoint[] allPoints) {
+		OurPoint[] toSortByY = allPoints.clone();
 		quicksortByY(toSortByY, 0, toSortByY.length - 1);
 		return toSortByY;
 	}
 
-	private void quicksortByY(Point[] toSortByY, int low, int high) {
+	private void quicksortByY(OurPoint[] toSortByY, int low, int high) {
 		int i = low, j = high;
-		Point pivot = toSortByY[low + (high - low) / 2];
+		OurPoint pivot = toSortByY[low + (high - low) / 2];
 		while (i <= j) {
 			while (toSortByY[i].getY() < pivot.getY()) {
 				i++;
@@ -344,8 +344,8 @@ public class ClosestPointsFinder {
 			quicksortByY(toSortByY, i, high);
 	}
 
-	private void exchange(Point[] points, int i, int j) {
-		Point temp = points[i];
+	private void exchange(OurPoint[] points, int i, int j) {
+		OurPoint temp = points[i];
 		points[i] = points[j];
 		points[j] = temp;
 	}
@@ -357,23 +357,23 @@ public class ClosestPointsFinder {
 	 */
 
 	public static void main(String[] args) {
-		Point p1 = new Point(1, 2);
-		Point p2 = new Point(5, 6);
-		Point p3 = new Point(5, 2);
-		Point p4 = new Point(4, 8);
-		Point p5 = new Point(1, 20);
-		Point p6 = new Point(4, 19);
-		Point p7 = new Point(4, 22);
-		Point p8 = new Point(3, 16);
-		Point p9 = new Point(0, 0);
-		Point p10 = new Point(2, 34);
-		Point p11 = new Point(2, 33);
-		Point p12 = new Point(20, 20);
-		Point[] points = { p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 };
+		OurPoint p1 = new OurPoint(1, 2);
+		OurPoint p2 = new OurPoint(5, 6);
+		OurPoint p3 = new OurPoint(5, 2);
+		OurPoint p4 = new OurPoint(4, 8);
+		OurPoint p5 = new OurPoint(1, 20);
+		OurPoint p6 = new OurPoint(4, 19);
+		OurPoint p7 = new OurPoint(4, 22);
+		OurPoint p8 = new OurPoint(3, 16);
+		OurPoint p9 = new OurPoint(0, 0);
+		OurPoint p10 = new OurPoint(2, 34);
+		OurPoint p11 = new OurPoint(2, 33);
+		OurPoint p12 = new OurPoint(20, 20);
+		OurPoint[] points = { p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 };
 
 		ClosestPointsFinder cpf = new ClosestPointsFinder();
-		Point[] result = cpf.getClosestPoints(points);
-		for (Point p : result) {
+		OurPoint[] result = cpf.getClosestPoints(points);
+		for (OurPoint p : result) {
 			System.out.println(p);
 		}
 

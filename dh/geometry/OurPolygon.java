@@ -1,13 +1,24 @@
-package dh.geometry.regions;
+package dh.geometry;
 
-public class Polygon {
-	private Point[] points;
+import java.awt.Polygon;
 
-	public Polygon(Point... points) {
+public class OurPolygon {
+	private OurPoint[] points;
+
+	public OurPolygon(OurPoint... points) {
 		this.points = points;
 	}
 
-	public boolean hasPoint(Point point) {
+	public Polygon getAWTPolygon(int scale) {
+		Polygon result = new Polygon();
+
+		for (OurPoint p : points)
+			result.addPoint((int) (scale * p.getX()), (int) (-1 * scale * p.getY()));
+
+		return result;
+	}
+
+	public boolean hasPoint(OurPoint point) {
 		boolean result = false;
 		int i = 0;
 		int j = points.length - 1;

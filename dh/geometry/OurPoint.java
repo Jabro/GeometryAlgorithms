@@ -1,12 +1,12 @@
-package dh.geometry.regions;
+package dh.geometry;
 
-public class Point {
+public class OurPoint {
 	private final double x;
 	private final double y;
 
 	// Constructor
 
-	public Point(double x, double y) {
+	public OurPoint(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -23,7 +23,7 @@ public class Point {
 
 	// new methods
 
-	public double getDistanceToPoint(Point p) {
+	public double getDistanceToPoint(OurPoint p) {
 		return Math.sqrt(Math.pow(getY() - p.getX(), 2)
 				+ Math.pow(getY() - p.getY(), 2));
 	}
@@ -38,8 +38,8 @@ public class Point {
 	@Override
 	public boolean equals(Object other) {
 		boolean result = false;
-		if (other instanceof Point) {
-			Point that = (Point) other;
+		if (other instanceof OurPoint) {
+			OurPoint that = (OurPoint) other;
 			result = (that.canEqual(this) && this.getX() == that.getX() && this
 					.getY() == that.getY());
 		}
@@ -52,6 +52,6 @@ public class Point {
 	}
 
 	public boolean canEqual(Object other) {
-		return (other instanceof Point);
+		return (other instanceof OurPoint);
 	}
 }
