@@ -21,9 +21,11 @@ public class OurPoint {
 		return y;
 	}
 
-	// new methods
+	/*
+	 * Liefert die euklidische Distanz zweier Punkte
+	 */
 
-	public double getDistanceToPoint(OurPoint p) {
+	public double getDistance(OurPoint p) {
 		return Math.sqrt(Math.pow(getY() - p.getX(), 2)
 				+ Math.pow(getY() - p.getY(), 2));
 	}
